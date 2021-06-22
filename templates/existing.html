@@ -1,0 +1,34 @@
+{% load static %}
+<html>
+   <body id="bg" style = "background-color: lightyellow;" ></body>
+   {% include "Base.html" %}
+   <center><h1>{{title}}</h1></center>
+   <table>
+      <thead>
+        <tr>
+          <b><td>S.No   </td>
+          <td>NAME  </td>
+  
+          <td>CONTACT   </td>
+          <td>EMAIL   </td>
+          <td>DOB</td>
+          </b>
+            
+        </tr>
+      </thead>
+      {% for k in queryset %}
+      <tbody>
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{k.name}}</td>
+          <td>{{k.contact}}</td>
+         
+          <td>{{k.email}}</td>
+          <td>{{k.dob}}</td>
+
+        </tr>
+      </tbody>
+      {% endfor %}
+   </table>
+
+</html>

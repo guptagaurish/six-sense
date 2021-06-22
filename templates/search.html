@@ -1,0 +1,11 @@
+{% load static %}
+<html>
+   <body id="bg" style = "background-color: lightyellow;" ></body>
+   {% include "Base.html" %}
+   <center><h1>{{title}}</h1></center>
+   <br>
+   <center><form method= 'post' > {% csrf_token %}
+      {{form.as_p}}
+      <button type="submit">Search<button><center>
+   </form>
+</html>
