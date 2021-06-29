@@ -1,8 +1,10 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse,redirect
 from .forms import StudForm,Sform
 from .models import stud
 from datetime import date
 from django.core.mail import send_mail
+import uuid
+from django.contrib import messages
 
 def existing(request):
     title="All Registered Students"
@@ -35,15 +37,17 @@ def register(request):
         p = stud(name = name, contact = contact, email = email,dob = dob)
 
         p.save()
+        stud_obj = stud.objects.create(user = p,auth_token = str(uuid.uuid4))
+        stud_obj.save()
         
         send_mail(
             "Submission of form",
-            "Hello,Thank you for registering with us ; Your Form is succesfully Submitted and you are registered.",
+            "Hello,Please verify your account http://127.0.0.1:8000/verify/{token}",
             "guptagaurish1011@gmail.com",
             [p.email],
             fail_silently=False
         )
-        return render(request,"ack.html",{"title":"Registered Successfully"})
+        return render(request,"ack.html",{"title":"Verify email"})
         #
         
 
@@ -80,3 +84,25 @@ def search(request):
         'form':form,
     }
     return render(request, "search.html",context)
+
+def verify(request , auth_token):
+    try:
+        profile_obj = stud.objects.filter(auth_token = auth_token).first()
+    
+
+        if profile_obj:
+            if profile_obj.is_verified:
+                messages.success(request, 'Your account is already verified.')
+                return render(request, 'ack.html')
+            profile_obj.is_verified = True
+            profile_obj.save()
+            messages.success(request, 'Your account has been verified.')
+            return render(request, 'ack.html')
+        else:
+            return redirect('/error')
+    except Exception as e:
+        print(e)
+        return redirect('/')
+
+def error_page(request):
+    return  render(request , 'error.html')

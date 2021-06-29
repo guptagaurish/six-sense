@@ -25,6 +25,8 @@ urlpatterns = [
     path('',views.register),
     path('existing-users/',views.existing),
     path('search/',views.search),
+    path('verify/<auth_token>' , views.verify , name="verify"),
+    path('error' , views.error_page , name="error"),
     url(r'^media/(?P<path>.*)$' ,serve,{'document_root':     settings.MEDIA_ROOT}),
     url(r'^static/(?P<path>.*)$' ,serve,{'document_root':     settings.STATIC_ROOT}),
     
